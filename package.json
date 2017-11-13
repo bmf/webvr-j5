@@ -4,12 +4,18 @@
   "description": "node server that blinks an led",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "led": "echo \"Running LED\" && node server.js led",
+    "servo": "echo \"Running Servo\" && node server.js servo",
+    "usen": "echo \"Running HC-SR04 Ultrasonic Sensor\" && node server.js usen",
+    "gamepad": "echo \"Running gamepad only\" && node server.js gamepad"
+    
   },
   "author": "brandon flade",
   "license": "ISC",
   "dependencies": {
-    "johnny-five": "^0.11.6",
+    "johnny-five": "^0.11.7",
+    "serialport": "^6.0.4",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
