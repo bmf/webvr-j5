@@ -2,82 +2,70 @@
 <html>
 
 <head>
-    <title>Hello, WebVR!</title>
-    <meta name="description" content="Hello, WebVR! - A-Frame">
-    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
-     <script src="https://cdn.rawgit.com/donmccurdy/aframe-gamepad-controls/v0.5.0/dist/aframe-gamepad-controls.js"></script>  
-    <script src="scripts/socket.io.slim.js"></script>
-    <script src="scripts/jquery.js"></script>
+  <title>Hello, WebVR!</title>
+  <meta name="description" content="Hello, WebVR! - A-Frame">
+  <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/donmccurdy/aframe-gamepad-controls/v0.5.0/dist/aframe-gamepad-controls.js"></script>
+  <script src="scripts/socket.io.slim.js"></script>
+  <script src="scripts/jquery.js"></script>
 </head>
 
 <body>
-    <!-- <button id="ledOn">Turn Me On!</button>
-  <button id="ledOff">Turn Me Off!</button> -->
-    <script>
+  <script>
     var socket = io.connect('/');
-    socket.on('connect', function(data) {
-        socket.emit('join');
+    socket.on('connect', function (data) {
+      socket.emit('join');
     });
-
     AFRAME.registerComponent('change-color-on-hover', {
-        schema: {
-            color: { default: 'blue' }
-        },
-
-        init: function() {
-
-            var data = this.data;
-            var el = this.el; // <a-box>
-
-            var defaultColor = el.getAttribute('material').color;
-            el.addEventListener('mouseenter', function() {
-                el.setAttribute('color', data.color);
-                socket.emit('led:on');
-            });
-            el.addEventListener('mouseleave', function() {
-                el.setAttribute('color', defaultColor);
-                socket.emit('led:off');
-            });
+      schema: {
+        color: {
+          default: 'blue'
         }
+      }
+      , init: function () {
+        var data = this.data;
+        var el = this.el; // <a-box>
+        var defaultColor = el.getAttribute('material').color;
+        el.addEventListener('mouseenter', function () {
+          el.setAttribute('color', data.color);
+          socket.emit('led:on');
+        });
+        el.addEventListener('mouseleave', function () {
+          el.setAttribute('color', defaultColor);
+          socket.emit('led:off');
+        });
+      }
     });
-      
     AFRAME.registerComponent('camera-listener', {
-        init: function() {
-            // Set up the tick throttling.
-            this.tick = AFRAME.utils.throttleTick(this.throttledTick, 1000, this);
-        },
-      /**
+      init: function () {
+        // Set up the tick throttling.
+        this.tick = AFRAME.utils.throttleTick(this.throttledTick, 1000, this);
+      }
+      , /**
        * Throttled Tick function
        */
-        throttledTick: function(t, dt) {
-            var cameraEl = this.el.sceneEl.camera.el;
-            var rot = cameraEl.getAttribute('rotation');
-            socket.emit('looked', Math.floor(rot.y));
-        }
+      throttledTick: function (t, dt) {
+        var cameraEl = this.el.sceneEl.camera.el;
+        var rot = cameraEl.getAttribute('rotation');
+        socket.emit('looked', Math.floor(rot.y));
+      }
     });
-      
-    socket.on('danger:on', function(){
-      
+    socket.on('danger:on', function () {
       var sky = document.querySelector('a-sky');
-      sky.setAttribute('color','red');
+      sky.setAttribute('color', 'red');
     });
-    
-    socket.on('danger:off', function(){
-      
+    socket.on('danger:off', function () {
       var sky = document.querySelector('a-sky');
-      sky.setAttribute('color','white');
+      sky.setAttribute('color', 'white');
     });
-    
-    </script>
-    <a-scene>
-        <a-box color="black" position="0 1 -4" change-color-on-hover="color: red"></a-box>
-        <a-sky color="white"></a-sky>
-        <a-camera camera="" position="0 1 0" look-controls="" gamepad-controls="" sound="" rotation="" scale="" visible="" camera-listener>
-<!--     added camera="" position="0 1 0" look-controls="" gamepad-controls="" sound="" rotation="" scale="" visible=""-->
-            <a-cursor></a-cursor>
-        </a-camera>
-    </a-scene>
-   
+  </script>
+  <a-scene>
+    <a-box color="black" position="0 1 -4" change-color-on-hover="color: red"></a-box>
+    <a-sky color="white"></a-sky>
+    <a-camera camera="" position="0 1 0" look-controls="" gamepad-controls="" sound="" rotation="" scale="" visible="" camera-listener>
+      <a-cursor></a-cursor>
+    </a-camera>
+  </a-scene>
 </body>
 
 </html>
